@@ -1,0 +1,30 @@
+trigger:
+- main
+
+pool:
+  name: Pool-1
+
+steps:
+- checkout: self
+
+# Step 1: Build Maven project
+- script: mvn clean package
+  displayName: Build Maven Project
+
+# Step 2: Run tests
+- script: mvn test
+  displayName: Run Unit Tests
+
+# Step 3: Simulate deployment
+- script: |
+    echo "Starting deployment simulation..."
+    mkdir deployed
+    copy target\*.jar deployed\
+    echo "Deployment completed successfully"
+  displayName: Simulate Deployment
+
+# Step 4: Verify deployment
+- script: |
+    echo "Deployed files:"
+    dir deployed
+  displayName: Verify Deployment
