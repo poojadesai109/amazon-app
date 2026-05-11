@@ -2,25 +2,29 @@ trigger:
 - main
 
 pool:
-  name: 'Pool-1'
+  name: Pool-1
 
 steps:
 - checkout: self
-  displayName: 'Checkout Code from GitHub'
 
-- script: mvn clean test
-  displayName: 'Build and Run Unit Tests'
+# Step 1: Build Maven project
+- script: mvn clean package
+  displayName: Build Maven Project
 
-- task: PublishTestResults@2
-  inputs:
-    testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
-    testResultsFormat: 'JUnit'
-    failTaskOnMissingResultsFile: true
-  displayName: 'Publish Maven Test Results'
+# Step 2: Run tests
+- script: mvn test
+  displayName: Run Unit Tests
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: 'target'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-  displayName: 'Publish Build Artifacts'
+# Step 3: Simulate deployment
+- script: |
+    echo "Starting deployment simulation..."
+    mkdir deployed
+    copy target\*.jar deployed\
+    echo "Deployment completed successfully"
+  displayName: Simulate Deployment
+
+# Step 4: Verify deployment
+- script: |
+    echo "Deployed files:"
+    dir deployed
+  displayName: Verify Deployment
